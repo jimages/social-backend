@@ -18,7 +18,7 @@ def genToken(user :object, expiration = 30 * 24 * 3600):
     """
     token = uuid.uuid4()
 
-    redis.set("login+" + user.username, token.hex, expiration)
+    redis.set("login+" + str(user.id), token.hex, expiration)
 
     return token.hex
 
@@ -29,11 +29,11 @@ def getToken(user: object):
     :param token: token
     :return: User object if success, None otherwise
     """
-    result = redis.get("login+" + user.name)
+    result = redis.get("login+" + str(user.id))
 
     # extend the ttl
     if result is not None:
-        redis.expire("login" + user.name, 30 * 24 * 3600)
+        redis.expire("login" + str(user.id), 30 * 24 * 3600)
 
     return None if result is None else result.decode()
 
@@ -73,12 +73,7 @@ def authRequired(func):
                     current_app.logger.warn("user对应token不存在：%s %s", id, request.remote_addr)
                     raise AuthFailError
 
-                data = {**request.args.to_dict(), **request.form.to_dict()}
-
-                uri = request.path
-                s = genSign(uri, data, timestamp , current_app.config["APP_KEY"], token)
-
-                if s != sign:
+                if token != sign:
                     current_app.logger.warn("认证失败: %s", request.remote_addr)
                     if not current_app.debug:
                         # in debug mode we skip the authorized stop

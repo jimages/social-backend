@@ -1,4 +1,5 @@
 from .redis import redis
+from .auth import authRequired
 
 def fail(message: str, status_code: int = 400):
     return ({

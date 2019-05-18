@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from marshmallow import Schema, fields, ValidationError, validates_schema, pre_load, post_load, post_dump, pre_dump
-import re, datetime, json
+import re, datetime, json, time
 from social import model
 from bcrypt import gensalt, hashpw
 from flask import g
@@ -68,3 +68,35 @@ class UserSchema(Schema):
 class UserLoginSchema(Schema):
     username = fields.Str(required=True, error_messages={'required': '缺少用户名.'})
     password = fields.Str(load_only=True, required=True, error_messages={'required': "缺少密码"})
+
+class PostSchema(Schema):
+    id = fields.Integer(dump_only=True)
+
+    body = fields.Str()
+    uri = fields.Str()
+
+    type = fields.Str(required=True)
+    publish_type = fields.Str(required=True)
+
+    user = fields.Nested(UserSchema)
+    is_anonymous = fields.Boolean()
+    anonymous_name = fields.Str()
+
+    emoji1 = fields.Integer()
+    emoji2 = fields.Integer()
+    emoji3 = fields.Integer()
+    emoji4 = fields.Integer()
+    emoji5 = fields.Integer()
+
+    @post_load
+    def make(self, data):
+        return model.Post(**data)
+    # todo: 数据验证
+
+class CommentSchema(Schema):
+    id = fields.Integer()
+    body = fields.Str()
+    user = fields.Nested(UserSchema)
+
+    is_anonymous = fields.Boolean()
+    anonymous = fields.Str()

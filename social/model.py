@@ -74,11 +74,21 @@ class User(db.Model, TimestampMixin):
 
 class Post(db.Model, TimestampMixin):
     id = db.Column(db.Integer, primary_key=True)
+
+    # 内容
     body = db.Column(db.Text())
+    uri = db.Column(db.VARCHAR(300))
+
+    # meta
+    type = db.Column(db.Enum("image", "text"), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=False)
     deleted = db.Column(db.BOOLEAN, nullable=False, default=False)
     is_anonymous = db.Column(db.Boolean, nullable=False, default=False)
-    anonymous = db.Column(db.VARCHAR(30), nullable=True)
+    anonymous_name = db.Column(db.VARCHAR(30), nullable=True)
+
+    # 发布类型
+    publish_type = db.Column(db.Enum("all", "institute", "self"), nullable=False, index=True)
+    publish_id = db.Column(db.Integer, db.ForeignKey(Institute.id), nullable=True)
 
     # emoji count
     emoji1 = db.Column(db.Integer, default=0)
@@ -102,14 +112,3 @@ class Comment(db.Model, TimestampMixin):
 
     post = db.relationship("Post", backref="comments")
     user = db.relationship("User", backref="comments")
-
-class Picture(db.Model, TimestampMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    uri = db.Column(db.Text())
-    user_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=False)
-    post_id = db.Column(db.Integer, db.ForeignKey(Post.id), nullable=False)
-
-    deleted = db.Column(db.BOOLEAN, nullable=False, default=False)
-
-    post = db.relationship("Post", backref="pictures")
-    user = db.relationship("User", backref="pictures")

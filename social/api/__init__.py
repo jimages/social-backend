@@ -6,6 +6,7 @@ import simplejson
 
 from .user import *
 from .institute import *
+from .post import *
 
 bp = Blueprint("api", "api", url_prefix="/api/v1")
 
@@ -33,3 +34,5 @@ def output_json(data, code, headers=None):
 restful.add_resource(Register, "/user/register", endpoint="userRegister")
 restful.add_resource(Login, "/user", endpoint="userLogin")
 restful.add_resource(Institute, "/user/institute", endpoint="institute")
+restful.add_resource(Post, "/post", endpoint="post")
+restful.add_resource(Upvote, "/post/upvote", endpoint="upvote")
