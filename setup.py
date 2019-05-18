@@ -19,6 +19,7 @@ setup(
         'marshmallow',
         'pycryptodome',
         'gunicorn',
-        "simplejson"
+        "simplejson",
+        "requests"
     ],
 )

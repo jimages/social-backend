@@ -1,5 +1,5 @@
 import json
-import os
+import os, requests
 from flask import current_app
 
 import time, bcrypt
@@ -13,7 +13,8 @@ from marshmallow import ValidationError
 
 __all__ = [
     'Register',
-    "Login"
+    "Login",
+    "Anonymous"
 ]
 
 user_schema = UserSchema()
@@ -72,3 +73,14 @@ class Login(Resource):
             "token": token,
             "timestamp": int(time.time()),
         })
+
+class Anonymous(Resource):
+    def get(self):
+        re = requests.get("https://international.v1.hitokoto.cn/",
+                     params= {
+                         "encode" : "json",
+                     })
+        if not re.ok:
+            return utils.ok(dict(name="一位追风少年"))
+        else:
+            return utils.ok(dict(name=re.json()['creator']))
