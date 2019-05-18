@@ -68,4 +68,3 @@ class UserSchema(Schema):
 class UserLoginSchema(Schema):
     username = fields.Str(required=True, error_messages={'required': '缺少用户名.'})
     password = fields.Str(load_only=True, required=True, error_messages={'required': "缺少密码"})
-

@@ -32,6 +32,7 @@ class User(db.Model, TimestampMixin):
     username = db.Column(db.VARCHAR(60), nullable=False, unique=True)
     password = db.Column(db.BINARY(60), nullable=True)  # Save bcrypt
     real_name = db.Column(db.CHAR(30), nullable=True)
+    avatar_uri = db.Column(db.VARCHAR(300))
     institute_id = db.Column(db.Integer, db.ForeignKey(Institute.id), nullable=True)
 
 
@@ -70,3 +71,45 @@ class User(db.Model, TimestampMixin):
             current_app.logger.info("用户id不存在： %s" % id)
             return None
         return user
+
+class Post(db.Model, TimestampMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.Text())
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=False)
+    deleted = db.Column(db.BOOLEAN, nullable=False, default=False)
+    is_anonymous = db.Column(db.Boolean, nullable=False, default=False)
+    anonymous = db.Column(db.VARCHAR(30), nullable=True)
+
+    # emoji count
+    emoji1 = db.Column(db.Integer, default=0)
+    emoji2 = db.Column(db.Integer, default=0)
+    emoji3 = db.Column(db.Integer, default=0)
+    emoji4 = db.Column(db.Integer, default=0)
+    emoji5 = db.Column(db.Integer, default=0)
+
+    user = db.relationship("User", backref="users")
+
+class Comment(db.Model, TimestampMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.Text())
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey(Post.id), nullable=False)
+
+    deleted = db.Column(db.BOOLEAN, nullable=False, default=False)
+
+    is_anonymous = db.Column(db.Boolean, nullable=False, default=False)
+    anonymous = db.Column(db.VARCHAR(30), nullable=True)
+
+    post = db.relationship("Post", backref="comments")
+    user = db.relationship("User", backref="comments")
+
+class Picture(db.Model, TimestampMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    uri = db.Column(db.Text())
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey(Post.id), nullable=False)
+
+    deleted = db.Column(db.BOOLEAN, nullable=False, default=False)
+
+    post = db.relationship("Post", backref="pictures")
+    user = db.relationship("User", backref="pictures")

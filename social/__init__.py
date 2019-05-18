@@ -1,7 +1,7 @@
-from flask import Flask, request, g, current_app, make_response, Blueprint
-import os, time, datetime
+from flask import Flask, request
+import os
 
-from social import model, exception, utils, api
+from social import model, exception, utils, api, upload
 from social.api import *
 
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -47,6 +47,7 @@ def create_app(config_filename = None):
     utils.redis.init_app(app)
 
     app.register_blueprint(api.bp)
+    app.register_blueprint(upload.bp)
 
     # add Resource
 

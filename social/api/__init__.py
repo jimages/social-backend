@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from flask import Blueprint, make_response
+from flask import make_response, Blueprint
 from flask_restful import Api
 import simplejson
 
 from .user import *
 from .institute import *
-from ..utils import ok
 
 bp = Blueprint("api", "api", url_prefix="/api/v1")
 

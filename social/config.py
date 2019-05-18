@@ -10,6 +10,7 @@ class Config(object):
     SQLALCHEMY_DATABASE_URI = "mysql+mysqldb://root@localhost/social?charset=utf8mb4"
     SQLALCHEMY_POOL_RECYCLE = 60
     REDIS_URL = "redis://localhost/0"
+    UPLOAD_FOLDER = "/var/www/html/img"
 
 
 class ProductionConfig(Config):
