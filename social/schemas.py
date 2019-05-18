@@ -96,7 +96,14 @@ class PostSchema(Schema):
 class CommentSchema(Schema):
     id = fields.Integer()
     body = fields.Str()
-    user = fields.Nested(UserSchema)
+    user = fields.Nested(UserSchema, load_only=True)
+    post_id = fields.Integer(load_only=True, required=True)
+
+    user = fields.Nested(UserSchema, dump_only=True)
 
     is_anonymous = fields.Boolean()
-    anonymous = fields.Str()
+    anonymous_name = fields.Str()
+
+    @post_load
+    def make(self, data):
+        return model.Comment(**data)

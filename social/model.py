@@ -108,7 +108,7 @@ class Comment(db.Model, TimestampMixin):
     deleted = db.Column(db.BOOLEAN, nullable=False, default=False)
 
     is_anonymous = db.Column(db.Boolean, nullable=False, default=False)
-    anonymous = db.Column(db.VARCHAR(30), nullable=True)
+    anonymous_name = db.Column(db.VARCHAR(30), nullable=True)
 
     post = db.relationship("Post", backref="comments")
     user = db.relationship("User", backref="comments")

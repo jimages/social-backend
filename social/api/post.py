@@ -10,7 +10,8 @@ from social.utils import authRequired
 
 __all__ = [
     'Post',
-    'Upvote'
+    'Upvote',
+    "Comment"
 ]
 
 post_schema = schemas.PostSchema()
@@ -76,3 +77,17 @@ class Comment(Resource):
     def post(self):
         current_app.logger.info("Comment")
 
+        json = request.get_json()
+
+        comment = comment_schema.load(json)
+        post = model.Post.query.get(json['post_id'])
+        if post is None:
+            raise exception.DataInvaliError("not found post")
+        comment.data.post_id = post.id
+        comment.data.user_id = g.current_user.id
+
+        model.db.session.add(comment.data)
+        model.db.session.commit()
+
+        comment = comment_schema.dump(comment.data)
+        return utils.ok(comment.data, 201)
