@@ -69,6 +69,22 @@ class UserLoginSchema(Schema):
     username = fields.Str(required=True, error_messages={'required': '缺少用户名.'})
     password = fields.Str(load_only=True, required=True, error_messages={'required': "缺少密码"})
 
+class CommentSchema(Schema):
+    id = fields.Integer()
+    body = fields.Str()
+    user = fields.Nested(UserSchema, load_only=True)
+    post_id = fields.Integer(load_only=True, required=True)
+
+    user = fields.Nested(UserSchema, dump_only=True)
+
+    is_anonymous = fields.Boolean()
+    anonymous_name = fields.Str()
+
+    @post_load
+    def make(self, data):
+        return model.Comment(**data)
+
+
 class PostSchema(Schema):
     id = fields.Integer(dump_only=True)
 
@@ -88,22 +104,9 @@ class PostSchema(Schema):
     emoji4 = fields.Integer()
     emoji5 = fields.Integer()
 
+    comments = fields.Nested(CommentSchema)
+
     @post_load
     def make(self, data):
         return model.Post(**data)
     # todo: 数据验证
-
-class CommentSchema(Schema):
-    id = fields.Integer()
-    body = fields.Str()
-    user = fields.Nested(UserSchema, load_only=True)
-    post_id = fields.Integer(load_only=True, required=True)
-
-    user = fields.Nested(UserSchema, dump_only=True)
-
-    is_anonymous = fields.Boolean()
-    anonymous_name = fields.Str()
-
-    @post_load
-    def make(self, data):
-        return model.Comment(**data)

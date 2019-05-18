@@ -3,7 +3,7 @@ from .auth import authRequired
 
 def fail(message: str, status_code: int = 400):
     return ({
-        "code":"-1",
+        "code":-1,
         "data":{},
         "msg": message
     }, status_code)
