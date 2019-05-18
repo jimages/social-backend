@@ -90,6 +90,12 @@ def create_app(config_filename = None):
         data = utils.fail(str(e), 404)
         return make_response(simplejson.dumps(data[0], separators=(',', ':'), sort_keys=True), data[1])
 
+    @app.errorhandler(exception.LoginFailError)
+    def LoginFailException(e):
+        app.logger.exception(str(e))
+        data = utils.fail(str(e), 401)
+        return make_response(simplejson.dumps(data[0], separators=(',', ':'), sort_keys=True), data[1])
+
 
     @app.errorhandler(exception.DataInvaliError)
     def serverInternalException(e):

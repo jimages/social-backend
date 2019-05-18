@@ -18,7 +18,7 @@ def genToken(user :object, expiration = 30 * 24 * 3600):
     """
     token = uuid.uuid4()
 
-    redis.set("login+" + user.name, token.hex, expiration)
+    redis.set("login+" + user.username, token.hex, expiration)
 
     return token.hex
 

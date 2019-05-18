@@ -30,5 +30,5 @@ def output_json(data, code, headers=None):
     resp.headers.extend(headers or {})
     return resp
 
-restful.add_resource(Register, "/user/register", endpoint="tel_user_login")
-restful.add_resource(Login, "/user", endpoint="tel_user_login")
+restful.add_resource(Register, "/user/register", endpoint="userRegister")
+restful.add_resource(Login, "/user", endpoint="userLogin")

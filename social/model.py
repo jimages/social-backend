@@ -42,12 +42,12 @@ class User(db.Model, TimestampMixin):
         if bcrypt.checkpw(password.encode(), self.password):
             return self
         else:
-            current_app.logger.warning("密码错误： %s" % self.name)
+            current_app.logger.warning("密码错误： %s" % self.username)
             return False
 
     @staticmethod
     def getByUsername(username: str):
-        user = User.query.filter_by(name=username).first()
+        user = User.query.filter_by(username=username).first()
         if not user:
             current_app.logger.warning("用户username不存在： %s" % username)
             return None
@@ -62,15 +62,7 @@ class User(db.Model, TimestampMixin):
         return user
 
 
-    @staticmethod
-    def hasPassword(username: str):
-        user = User.query.filter_by(name=username).first()
-        if not user:
-            current_app.logger.info("用户不存在： %s" % username)
-            raise DataInvaliError("用户不存在？", "username")
-
-        if user.password == "":
-            return "false"
-        else:
-            return "true"
-
+class Institute(db.Model, TimestampMixin):
+    """User definition"""
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.VARCHAR(60), nullable=False, index=True)
