@@ -48,11 +48,17 @@ class Sha256(fields.Str):
             raise ValidationError("你的签名似乎有问题？你想搞个大新闻？")
         return value
 
+class InstituteSchema(Schema):
+    id = fields.Integer(dump_only=True)
+    name = fields.Str(required=True)
+
+
 class UserSchema(Schema):
     id = fields.Integer(dump_only=True)
     username = fields.Str(required=True, error_messages={'required': '缺少用户名.'})
     real_name = fields.Str(required=True, error_messages={'required': '缺少真实姓名.'})
-    institute = fields.Str(required=True, error_messages={'required': '缺少学院.'})
+    institute_id = fields.Integer(load_only=True,required=True, error_messages={'required': '缺少学院.'})
+    institute = fields.Nested(InstituteSchema)
     password = fields.Str(load_only=True, required=True, error_messages={'required': "缺少密码"})
 
     @post_load
@@ -62,8 +68,4 @@ class UserSchema(Schema):
 class UserLoginSchema(Schema):
     username = fields.Str(required=True, error_messages={'required': '缺少用户名.'})
     password = fields.Str(load_only=True, required=True, error_messages={'required': "缺少密码"})
-
-class InstitudeSchema(Schema):
-    id = fields.Integer(dump_only=True)
-    name = fields.Str(required=True)
 

@@ -5,6 +5,7 @@ from flask_restful import Api
 import simplejson
 
 from .user import *
+from .institute import *
 from ..utils import ok
 
 bp = Blueprint("api", "api", url_prefix="/api/v1")
@@ -32,3 +33,4 @@ def output_json(data, code, headers=None):
 
 restful.add_resource(Register, "/user/register", endpoint="userRegister")
 restful.add_resource(Login, "/user", endpoint="userLogin")
+restful.add_resource(Institute, "/user/institute", endpoint="institute")

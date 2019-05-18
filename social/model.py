@@ -18,14 +18,24 @@ class TimestampMixin(object):
     time_created = db.Column(db.TIMESTAMP, server_default=func.current_timestamp())
     time_updated = db.Column(db.TIMESTAMP, server_onupdate=func.current_timestamp(), server_default=func.current_timestamp())
 
+
+class Institute(db.Model, TimestampMixin):
+    """User definition"""
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.VARCHAR(60), nullable=False, index=True)
+
+
 class User(db.Model, TimestampMixin):
     """User definition"""
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.VARCHAR(60), nullable=False, index=True)
+    username = db.Column(db.VARCHAR(60), nullable=False, unique=True)
     password = db.Column(db.BINARY(60), nullable=True)  # Save bcrypt
     real_name = db.Column(db.CHAR(30), nullable=True)
-    institute = db.Column(db.VARCHAR(20), nullable=True)
+    institute_id = db.Column(db.Integer, db.ForeignKey(Institute.id), nullable=True)
+
+
+    institute = db.relationship("Institute", backref="users")
 
     def checkPassword(self, password: str):
         """Check the password of certain user
@@ -60,9 +70,3 @@ class User(db.Model, TimestampMixin):
             current_app.logger.info("用户id不存在： %s" % id)
             return None
         return user
-
-
-class Institute(db.Model, TimestampMixin):
-    """User definition"""
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.VARCHAR(60), nullable=False, index=True)

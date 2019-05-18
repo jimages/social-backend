@@ -15,10 +15,10 @@ __all__ = [
     'Institute',
 ]
 
-ins_schema = schemas.InstitudeSchema(many=True)
+ins_schema = schemas.InstituteSchema(many=True)
 
 class Institute(Resource):
     def get(self):
         ins = model.Institute.query.all()
         ins = ins_schema.dump(ins)
-        return utils.ok(dict(institutes=ins))
+        return utils.ok(dict(institutes=ins.data))
